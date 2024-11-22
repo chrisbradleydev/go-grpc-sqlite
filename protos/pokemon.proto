@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+option go_package = "github.com/chrisbradleydev/go-grpc-sqlite/protos";
+
+package pokemon;
+
+service PokemonService {
+  rpc AddPokemon (AddPokemonRequest) returns (Pokemon) {}
+  rpc GetPokemonByName (PokemonNameRequest) returns (Pokemon) {}
+  rpc GetPokemonByType (PokemonTypeRequest) returns (PokemonList) {}
+  rpc GetAllPokemon (Empty) returns (PokemonList) {}
+  rpc DeletePokemonById (DeletePokemonRequest) returns (Empty) {}
+  rpc PokemonExists (PokemonNameRequest) returns (PokemonExistsResponse) {}
+}
+
+message Empty {}
+
+message Pokemon {
+  int32 id = 1;
+  string name = 2;
+  int32 height = 3;
+  int32 weight = 4;
+  repeated string types = 5;
+}
+
+message PokemonTypeRequest {
+  string type = 1;
+}
+
+message PokemonList {
+  repeated Pokemon pokemon = 1;
+}
+
+message AddPokemonRequest {
+  Pokemon pokemon = 1;
+}
+
+message PokemonNameRequest {
+  string name = 1;
+}
+
+message DeletePokemonRequest {
+  int32 id = 1;
+}
+
+message PokemonExistsResponse {
+  bool exists = 1;
+}

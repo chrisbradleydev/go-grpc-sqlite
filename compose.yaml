@@ -1,0 +1,30 @@
+services:
+  client:
+    build:
+      context: .
+      dockerfile: ./.docker/client/Dockerfile
+      args:
+        BUILD_DIR: "${CLIENT_DIR:-cmd/client}"
+    environment:
+      APP_ENV: "${APP_ENV:-development}"
+      GRPC_HOST: "server"
+      GRPC_PORT: "${GRPC_PORT:-50055}"
+    depends_on:
+      - server
+    profiles:
+      - client
+  server:
+    build:
+      context: .
+      dockerfile: ./.docker/server/Dockerfile
+      args:
+        BUILD_DIR: "${SERVER_DIR:-cmd/server}"
+    environment:
+      APP_ENV: "${APP_ENV:-development}"
+      GRPC_HOST: "${GRPC_HOST:-localhost}"
+      GRPC_PORT: "${GRPC_PORT:-50055}"
+      SQLITE_DB: "${SQLITE_DB:-/app/data/pokemon.db}"
+    ports:
+      - "${GRPC_PORT:-50055}:${GRPC_PORT:-50055}"
+    volumes:
+      - ./data:/app/data
